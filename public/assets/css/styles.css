@@ -1,0 +1,1170 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * EVENTS PORTAL ADMIN - GLOBAL DESIGN SYSTEM
+ * styles.css · LOAD ON EVERY ADMIN PAGE (first stylesheet after Bootstrap)
+ * ───────────────────────────────────────────────────────────────────────────
+ * Everything shared by the whole Admin Portal lives here:
+ *    1. Design tokens (:root)          7.  Badges / status pills
+ *    2. Base reset & typography        8.  Dropdown & floating action menus
+ *    3. Page header + breadcrumbs      9.  Delete-confirmation modal
+ *    4. Section titles                 10. Admin hero background + swatch
+ *    5. Stat cards                     11. Scroll-to-top
+ *    6. Buttons                        12. Global responsive
+ * table.css and form.css NEVER redefine anything in this file - they only add
+ * table-only / form-only rules on top of these globals. The top navigation
+ * bar (shared with the public site header) lives in navbar.css, loaded right
+ * after this file - it is one component reused by both, not admin-specific.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+@charset "UTF-8";
+
+/* ═══════════════════════════════════════════════════════════════
+   1. DESIGN TOKENS
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Typography */
+  --font-sans: "Inter", "Roboto", system-ui, -apple-system, sans-serif;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+
+  /* Brand - sky blue */
+  --brand: #50c5ff;
+  --brand-dark: #36bafc;
+  --brand-deeper: #50c5ff;
+  /* CONSISTENCY FIX: matched to Digital Cards Portal's Phase-3 correction -
+     these previously mixed in the older #0ea5e9 blue family instead of the
+     current #50c5ff brand. No call sites changed; they all read these
+     tokens so the fix applies everywhere automatically. */
+  --brand-soft: rgba(80, 197, 255, 0.07);
+  --brand-ring: rgba(80, 197, 255, 0.20);
+  --brand-50: #f0f9ff;
+  --brand-100: #e0f2fe;
+  --brand-200: #bae6fd;
+  /* Distinct dark-navbar hover shade - NOT a duplicate of --brand-dark,
+     which is tuned for light surfaces (buttons/links on white). This one
+     reads correctly against the navbar's dark gradient. */
+  --brand-hover: #16a6e6;
+
+  /* Navbar (dark header) - PHASE 3: consumed by navbar.css, which used to
+     define these itself as local --dc-nav-* tokens. Centralized here so
+     any page that loads styles.css (every admin/public page) can also
+     reference the same dark-surface colors without pulling in navbar.css
+     first - e.g. the mobile-logout white-flash fix below sets the page
+     background to --nav-bg while the offcanvas/modal are open. */
+  --nav-bg: #0c1630;
+  --nav-bg-secondary: #111827;
+  --nav-text: rgba(255, 255, 255, 0.86);
+  --nav-muted: rgba(255, 255, 255, 0.56);
+  --nav-card: rgba(255, 255, 255, 0.06);
+
+  /* Neutrals - cool slate */
+  --n-0: #ffffff;
+  --n-50: #f8fafc;
+  --n-100: #f1f5f9;
+  --n-150: #eaf0f6;
+  --n-200: #e2e8f0;
+  --n-300: #cbd5e1;
+  --n-400: #94a3b8;
+  --n-500: #64748b;
+  --n-600: #475569;
+  --n-700: #334155;
+  --n-800: #1e293b;
+  --n-900: #0f172a;
+  --n-950: #070e1a;
+
+  /* Semantic colors */
+  --green-50: #ecfdf5;
+  --green: #10b981;
+  --green-dark: #059669;
+  --green-text: #065f46;
+
+  --amber-50: #fffbeb;
+  --amber: #f59e0b;
+  --amber-dark: #d97706;
+  --amber-text: #92400e;
+
+  --red-50: #fef2f2;
+  --red: #ef4444;
+  --red-dark: #dc2626;
+  --red-text: #991b1b;
+
+  --violet-50: #f5f3ff;
+  --violet: #8b5cf6;
+  --violet-dark: #7c3aed;
+  --violet-text: #5b21b6;
+
+  /* Surfaces */
+  --bg: #f1f5f9;
+  --bg-page: #f1f5f9;
+  --surface: #ffffff;
+  --surface-1: #f8fafc;
+  --surface-2: #f1f5f9;
+
+  /* Borders */
+  --border: #e2e8f0;
+  --border-md: #cbd5e1;
+  --border-focus: #0ea5e9;
+
+  /* Text */
+  --text: #334155;
+  --text-head: #0f172a;
+  --text-muted: #64748b;
+  --text-faint: #94a3b8;
+  --text-inv: #ffffff;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.07), 0 3px 6px rgba(15, 23, 42, 0.03);
+  --shadow-xl: 0 16px 40px rgba(15, 23, 42, 0.08), 0 6px 12px rgba(15, 23, 42, 0.04);
+
+  /* Radius */
+  --r-xs: 3px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-2xl: 24px;
+  --r-pill: 9999px;
+
+  /* Motion */
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --t-fast: .12s var(--ease);
+  --t-base: .2s var(--ease);
+  --t-slow: .35s var(--ease);
+
+  /* Backward-compatible aliases (older blades / vendor themes) */
+  --default-font: var(--font-sans);
+  --heading-font: var(--font-display);
+  --background-color: var(--bg);
+  --surface-color: var(--surface);
+  --default-color: var(--text);
+  --heading-color: var(--text-head);
+  --accent-color: var(--brand);
+  --accent-hover: var(--brand-dark);
+  --accent-soft: var(--brand-soft);
+  --border-color: var(--border);
+  --contrast-color: var(--text-inv);
+  --box-shadow-md: var(--shadow-md);
+
+  scroll-behavior: smooth;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. BASE RESET & TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  /* readable base - steps down on small phones */
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+a:hover {
+  color: var(--brand-dark);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  color: var(--text-head);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-top: 0;
+}
+
+p {
+  margin-top: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+section,
+.section {
+  padding: 52px 0;
+  background: var(--bg);
+  overflow: clip;
+}
+
+/* Public pages (about/sponsors/pricing/contact/terms/privacy/policies) read
+   at the same content width as the admin dashboard pages
+   (table.css's .dashboard-shell > .container is max-width:1800px). */
+.section > .container {
+  max-width: 1800px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. PAGE HEADER + BREADCRUMBS  (.page-header / .web-panel-hero)
+   ═══════════════════════════════════════════════════════════════ */
+.web-panel-hero{
+  position: relative;
+  min-height: 300px;
+  padding: 96px 24px 56px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.web-panel-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(110deg,
+      rgba(7, 14, 26, .96) 0%,
+      rgba(14, 27, 52, .88) 38%,
+      rgba(14, 27, 52, .72) 100%);
+}
+
+.web-panel-hero::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14, 165, 233, .22) 0%, rgba(14, 165, 233, 0) 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Per-record hero background (e.g. an event's own poster) supplied via
+   the --hero-bg custom property, instead of a hard-coded url() - used
+   where the image genuinely varies per page load and can't be a static
+   class like .page-header--admin. */
+.web-panel-hero-dynamic-bg {
+  background-image: var(--hero-bg);
+}
+
+.web-panel-hero .container{
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  width: 100%;
+}
+
+.web-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+  border-radius: var(--r-pill);
+  background: rgba(14, 165, 233, .14);
+  border: 1px solid rgba(14, 165, 233, .28);
+  color: #bae6fd;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+.web-hero-badge i {
+  color: var(--brand);
+}
+
+.web-panel-hero h1 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.web-panel-hero>.container>p{
+  max-width: 680px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, .78);
+  font-size: .925rem;
+  line-height: 1.75;
+}
+
+/* Breadcrumbs */
+.web-panel-hero .breadcrumbs{
+  margin-top: 24px;
+}
+
+.web-panel-hero .breadcrumbs ol{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.web-panel-hero .breadcrumbs li{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .55);
+}
+
+.web-panel-hero .breadcrumbs li a{
+  color: rgba(255, 255, 255, .65);
+  transition: color var(--t-fast);
+}
+
+.web-panel-hero .breadcrumbs li a:hover{
+  color: var(--brand);
+}
+
+.web-panel-hero .breadcrumbs li:last-child{
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.web-panel-hero .breadcrumbs li+li::before{
+  content: "/";
+  margin-right: 6px;
+  color: rgba(255, 255, 255, .3);
+  font-weight: 400;
+}
+
+/* centered page-title hero */
+.page-title.web-panel-hero
+, .page-title.web-panel-hero>.container{
+  text-align: center;
+}
+
+.page-title.web-panel-hero>.container>p{
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. SECTION TITLE  (.section-title)
+   ═══════════════════════════════════════════════════════════════ */
+.section-title {
+  margin-bottom: 28px;
+}
+
+.section-title h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  /* --brand-deeper, not --brand - same small-uppercase-label color used
+     everywhere else (.events-kicker, .portal-section-eyebrow...); --brand
+     alone is too light to read well at this size. */
+  color: var(--brand-deeper);
+}
+
+.section-title h2::after {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 2px;
+  border-radius: var(--r-pill);
+  background: var(--brand-deeper);
+  opacity: .4;
+}
+
+.section-title p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text-head);
+  line-height: 1.3;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. STAT CARDS  (.web-top-card)
+   ═══════════════════════════════════════════════════════════════ */
+.web-top-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--t-base), box-shadow var(--t-base), transform var(--t-base);
+  overflow: hidden;
+}
+
+.web-top-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  right: 22px;
+  height: 3px;
+  border-radius: 0 0 var(--r-pill) var(--r-pill);
+  background: linear-gradient(90deg, var(--brand), transparent);
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+
+.web-top-card:hover {
+  border-color: var(--brand-ring);
+  box-shadow: var(--shadow-md), 0 0 0 3px var(--brand-soft);
+  transform: translateY(-2px);
+}
+
+.web-top-card:hover::before {
+  opacity: 1;
+}
+
+.web-top-card-icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-50);
+  color: var(--brand);
+  font-size: 1.15rem;
+  border: 1px solid var(--brand-200);
+}
+
+.web-top-card-success {
+  background: var(--green-50);
+  color: var(--green);
+  border-color: rgba(16, 185, 129, .2);
+}
+
+/* CONSISTENCY FIX: ported from Digital Cards Portal's styles.css, plus a
+   matching -warning variant (DCP doesn't have one; added here following
+   the exact same pattern) for stat cards that need an amber/red accent
+   (e.g. Draft / Cancelled counts on the Admin Dashboard). */
+.web-top-card-danger {
+  background: var(--red-50);
+  color: var(--red);
+  border-color: rgba(239, 68, 68, .2);
+}
+
+.web-top-card-warning {
+  background: var(--amber-50);
+  color: var(--amber-dark);
+  border-color: rgba(245, 158, 11, .2);
+}
+
+.web-top-card-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.web-top-card-content h4 {
+  margin: 0 0 4px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.web-top-card-value {
+  margin-bottom: 6px;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-head);
+  line-height: 1;
+}
+
+.web-top-card-content p {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.55;
+  color: var(--text-faint);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. BUTTONS
+   ───────────────────────────────────────────────────────────────
+   .btn-primary  .btn-secondary  .btn-danger  .btn-light
+   Form alias:   .form-btn + .form-btn-primary / -light / -secondary / -danger
+   ═══════════════════════════════════════════════════════════════ */
+.btn-primary,
+.btn-secondary,
+.btn-dark,
+.events-card-cta,
+.form-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: .862rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--t-base);
+  position: relative;
+}
+
+.form-btn:hover,
+.form-btn:focus,
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-dark:focus,
+.events-card-cta:focus {
+  text-decoration: none;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-dark:disabled,
+.form-btn:disabled,
+.form-btn.disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Primary
+   Text stays --text-head (not white) on the #50c5ff brand fill: white text
+   on this fill measures 1.95:1 contrast, failing WCAG AA. --text-head hits
+   9.16:1 default / 8.15:1 hover, matching the Digital Cards Portal reference. */
+.btn-primary,
+.events-card-cta,
+.form-btn-primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--text-head);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, .2);
+}
+
+.btn-primary:hover,
+.events-card-cta:hover,
+.form-btn-primary:hover,
+.btn-primary:focus,
+.form-btn-primary:focus {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: var(--text-head);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, .28);
+  transform: translateY(-1px);
+}
+
+/* Secondary / light */
+.btn-secondary,
+.form-btn-light {
+  background: var(--surface);
+  border-color: var(--border-md);
+  color: var(--text-head);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-secondary:hover,
+.form-btn-light:hover,
+.form-btn-light:focus {
+  background: var(--n-50);
+  border-color: var(--brand-ring);
+  color: var(--brand-dark);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* Danger (destructive form actions, e.g. "Delete Event") — was referenced
+   by admin/events/show.blade.php as .form-btn-danger but never actually
+   defined, so that button was rendering unstyled. Same red used by
+   .btn-delete-confirm (the modal-confirm button), sized to the shared
+   .form-btn box model so it lines up with its sibling action buttons. */
+.form-btn-danger {
+  background: var(--red);
+  border-color: var(--red-dark);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, .2);
+}
+
+.form-btn-danger:hover,
+.form-btn-danger:focus {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, .28);
+  transform: translateY(-1px);
+}
+
+/* Dark / inverse - same system, dark-navy fill (home hero's middle CTA) */
+.btn-dark{
+  background: var(--n-900);
+  border-color: var(--n-900);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .2);
+}
+
+.btn-dark:hover
+, .btn-dark:focus{
+  background: var(--n-800);
+  border-color: var(--n-800);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, .28);
+  transform: translateY(-1px);
+}
+
+/* Button loading spinner (used by .form-btn.is-loading) */
+.form-btn-spinner {
+  display: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, .35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: portalSpin .65s linear infinite;
+}
+
+.form-btn.is-loading .form-btn-spinner,
+.form-btn.loading .form-btn-spinner {
+  display: inline-block;
+}
+
+@keyframes portalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon-only action trigger (table row "⋮" etc.) */
+.portal-action-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--n-600);
+  font-size: 1rem;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--t-base);
+  cursor: pointer;
+}
+
+.portal-action-btn:hover,
+.portal-action-btn:focus {
+  background: var(--n-50);
+  border-color: var(--border-md);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+
+/* Confirm-delete button (used inside modals) — same box model as every
+   other button (.btn-primary/.btn-secondary/.form-btn), so it doesn't read
+   as a smaller/different shape next to the modal's Cancel button. */
+.btn-delete-confirm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--red-dark);
+  background: var(--red);
+  color: #fff;
+  font-size: .862rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--t-base);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, .2);
+}
+
+.btn-delete-confirm:hover {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, .28);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. BADGES / STATUS PILLS
+   ───────────────────────────────────────────────────────────────
+   .status-badge (canonical) · .web-status-badge (legacy alias, kept in sync)
+   Variants: success / warning / danger / info / secondary
+   ═══════════════════════════════════════════════════════════════ */
+.status-badge,
+.web-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.status-badge i,
+.web-status-badge i {
+  font-size: .8rem;
+}
+
+/* .status-badge keeps a comfortable min width for table cells */
+.status-badge {
+  min-width: 110px;
+  min-height: 30px;
+}
+
+/* Spacing hook for a second status-badge stacked under a first one in the
+   same table cell (e.g. Visible/Hidden, then Answered/Awaiting Reply). */
+.status-badge-stack {
+  margin-top: 4px;
+}
+
+/* success / active / published */
+.status-success,
+.web-status-active,
+.status-published {
+  background: var(--green-50);
+  border-color: rgba(16, 185, 129, .22);
+  color: var(--green-text);
+}
+
+/* warning / inactive / pending / draft */
+.status-warning,
+.web-status-inactive,
+.status-draft {
+  background: var(--amber-50);
+  border-color: rgba(245, 158, 11, .22);
+  color: var(--amber-text);
+}
+
+/* danger / failed / suspended / cancelled */
+.status-danger,
+.status-cancelled {
+  background: var(--red-50);
+  border-color: rgba(239, 68, 68, .22);
+  color: var(--red-text);
+}
+
+/* info / physical event format / staff role */
+.status-info,
+.status-physical,
+.status-staff {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+/* neutral / secondary / default / completed / archived */
+.status-secondary,
+.status-completed,
+.status-archived {
+  background: var(--n-100);
+  border-color: var(--border);
+  color: var(--n-600);
+}
+
+/* teal / online event format / panelist role */
+.status-online,
+.status-panelist {
+  background: #ecfeff;
+  border-color: #a5f3fc;
+  color: #0e7490;
+}
+
+/* violet / hybrid event format / admin role */
+.status-hybrid,
+.status-admin {
+  background: var(--violet-50);
+  border-color: rgba(139, 92, 246, .22);
+  color: var(--violet-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. DROPDOWN & FLOATING ACTION MENUS
+   Row-level "..." action menus used on every listing page.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* let dropdowns overflow their table card */
+.web-table-card,
+.portal-table-inner {
+  overflow: visible;
+}
+
+/* JS-positioned floating menu (fixed to viewport) */
+.floating-action-menu {
+  position: fixed;
+  z-index: 999999;
+  display: none;
+  width: 220px;
+  padding: 8px;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: 0 22px 55px rgba(15, 23, 42, .22);
+  border: 1px solid var(--border);
+}
+
+.floating-action-menu.show {
+  display: grid;
+  gap: 6px;
+}
+
+.floating-action-item {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-head);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .86rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.floating-action-item i {
+  color: var(--brand);
+}
+
+.floating-action-item:hover {
+  background: var(--brand-50);
+  color: var(--brand-deeper);
+}
+
+.floating-action-danger,
+.floating-action-danger i {
+  color: var(--red-dark);
+}
+
+.floating-action-danger:hover {
+  background: var(--red-50);
+  color: var(--red-dark);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. DELETE-CONFIRMATION MODAL  (.portal-delete-modal)
+   Used on every listing page (Categories, Events, Locations,
+   Organizers, Users, Questions) - one shared markup + style.
+   ═══════════════════════════════════════════════════════════════ */
+.portal-delete-modal .modal-content {
+  border-radius: var(--r-2xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.portal-delete-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px 0;
+  background: var(--surface);
+}
+
+.portal-delete-icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--red-50);
+  border: 1px solid rgba(239, 68, 68, .22);
+  color: var(--red-dark);
+  font-size: 1.1rem;
+}
+
+.portal-delete-body {
+  padding: 16px 24px;
+  background: var(--surface);
+}
+
+.portal-delete-body h5 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-head);
+}
+
+.portal-delete-body p {
+  margin: 0 0 14px;
+  font-size: .875rem;
+  color: var(--text-muted);
+}
+
+.portal-delete-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--red-50);
+  border: 1px solid rgba(239, 68, 68, .2);
+  color: var(--red-text);
+  font-size: .82rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.portal-delete-footer {
+  padding: 14px 24px 22px;
+  border-top: 0;
+  background: var(--surface);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. ADMIN HERO BACKGROUND + ENTITY COLOR SWATCH
+   Small, genuinely-dynamic helpers that replace repeated inline
+   style="" attributes across the Blade views.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Every admin page header uses the same background photo - bake it
+   into one modifier instead of repeating the same inline
+   background-image on every Blade file. The dark gradient overlay
+   already comes from .web-panel-hero::before above. */
+.page-header--admin {
+  background-image: url("../img/admin-panel.webp");
+}
+
+/* Per-record accent colour (category theme colour, etc). The Blade
+   markup sets only the custom property - e.g.
+   style="--swatch-color: {{ $category->theme_color }}" - everything
+   else is real CSS, not an inline style block.
+   No `display` here on purpose: every element that uses .color-swatch
+   also carries a sizing class (.portal-identity-icon, .portal-entity-icon,
+   .portal-color-dot) that already declares its own display - this class
+   only ever contributes the background colour, so it can't fight them
+   for centering/layout. */
+.color-swatch {
+  background: var(--swatch-color, var(--brand));
+}
+
+/* Mobile off-canvas user name (admin-navbar.blade.php) sits on the
+   dark nav surface and needs light text, unlike the default heading
+   colour used elsewhere. */
+.dc-command-user-name--on-dark {
+  color: var(--text-inv);
+}
+
+/* Generic "unstyled trigger" helper for a <button> that should look
+   and behave like plain text/an icon link (e.g. the mobile logout
+   trigger) rather than a default browser button. */
+.btn-reset {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. SCROLL TO TOP
+   ═══════════════════════════════════════════════════════════════ */
+.scroll-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 99999;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, .35);
+  cursor: pointer;
+  transition: all var(--t-base);
+}
+
+.scroll-top i {
+  font-size: 18px;
+}
+
+.scroll-top:hover {
+  background: var(--brand-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(14, 165, 233, .4);
+}
+
+.scroll-top.active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. GLOBAL RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 768px) {
+  [data-aos-delay] {
+    transition-delay: 0 !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+
+  .web-panel-hero {
+    min-height: 260px;
+    padding: 88px 18px 48px;
+  }
+}
+
+@media (max-width: 767.98px) {
+
+  section,
+  .section {
+    padding: 40px 0;
+  }
+
+  .web-panel-hero {
+    padding: 76px 16px 40px;
+    min-height: auto;
+  }
+
+  .web-hero-badge {
+    font-size: .68rem;
+  }
+
+  .web-panel-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .web-top-card {
+    padding: 18px;
+  }
+
+  .web-top-card-value {
+    font-size: 1.55rem;
+  }
+
+  .web-top-card-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body {
+    font-size: 14.5px;
+  }
+
+  .web-panel-hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .web-top-card {
+    gap: 14px;
+    border-radius: var(--r-lg);
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .form-btn,
+  .btn-delete-confirm {
+    min-height: 40px;
+    font-size: .82rem;
+  }
+
+  .section-title p {
+    font-size: 1.15rem;
+  }
+}
+
+/* ---- Mobile modal fit (delete-confirmation modal) ---- */
+@media (max-width: 575.98px) {
+  .portal-delete-top {
+    padding: 18px 18px 0;
+  }
+
+  .portal-delete-body,
+  .portal-delete-footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .portal-delete-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .portal-delete-footer .form-btn,
+  .portal-delete-footer .btn-delete-confirm,
+  .portal-delete-footer .btn-secondary {
+    width: 100%;
+  }
+}
+/* Bootstrap doesn't ship a display:contents utility - used to wrap a
+   floating-action-menu item in its own <form> (for a per-action CSRF
+   token / HTTP method) without the form itself taking part in the
+   menu's flex layout. */
+.d-contents {
+  display: contents;
+}

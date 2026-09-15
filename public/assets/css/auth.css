@@ -1,0 +1,876 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * DIGITAL CARDS PORTAL - AUTHENTICATION PAGES
+ * auth.css · LOAD AFTER styles.css on auth pages (login, register, OTP, reset)
+ * ───────────────────────────────────────────────────────────────────────────
+ * Split-screen auth: dark brand side panel + white form card.
+ * Themed entirely from styles.css design tokens so it matches the portal
+ * (brand #50c5ff, Poppins/Inter, shared radii/shadows). Inputs mirror
+ * .form-control-custom and buttons mirror .form-btn from the internal pages.
+ *   1. Page shell        5. Fields / inputs        9. Reset-option modal
+ *   2. Split card        6. OTP inputs            10. Responsive
+ *   3. Side panel        7. Buttons / actions
+ *   4. Card head         8. Footer / notes
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ═══ 1. PAGE SHELL ═══════════════════════════════════════════ */
+.auth-page {
+  width: 100%;
+  padding: 120px 0 72px;
+  background:
+    radial-gradient(circle at top right, rgba(80, 197, 255, .10), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(80, 197, 255, .06), transparent 30%),
+    var(--bg);
+}
+
+.auth-shell {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Narrower shell for a single-card auth flow with no side illustration
+   (reset password) - the wide 1120px default is sized for the two-column
+   login/register layouts. */
+.auth-shell-narrow {
+  max-width: 520px;
+}
+
+.auth-login-page,
+.auth-register-page,
+.auth-password-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+.auth-login-page .main,
+.auth-register-page .main,
+.auth-password-page .main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-login-page .auth-page,
+.auth-register-page .auth-page,
+.auth-password-page .auth-page {
+  flex: 1 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ═══ 2. SPLIT CARD (side + form) ═════════════════════════════ */
+.auth-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.auth-side-col {
+  padding: 0;
+}
+
+/* ═══ 3. SIDE PANEL (dark brand identity) ═════════════════════ */
+.auth-side {
+  position: relative;
+  width: 100%;
+  padding: 46px 40px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at top left, rgba(80, 197, 255, .18), transparent 32%),
+    linear-gradient(160deg, #0c1630 0%, #111827 100%);
+}
+
+.auth-side::after {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -90px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(80, 197, 255, .22), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.auth-side-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 6px 14px;
+  margin-bottom: 22px;
+  border-radius: var(--r-pill);
+  background: rgba(80, 197, 255, .14);
+  border: 1px solid rgba(80, 197, 255, .28);
+  color: #bae6fd;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.auth-side-badge i {
+  color: var(--brand);
+}
+
+.auth-side h1 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+}
+
+.auth-side-text {
+  margin: 0 0 26px;
+  color: rgba(255, 255, 255, .74);
+  font-size: .9rem;
+  line-height: 1.75;
+}
+
+.auth-side-list {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.auth-side-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: rgba(255, 255, 255, .86);
+  font-size: .875rem;
+  line-height: 1.6;
+}
+
+.auth-side-item i {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand);
+  font-size: 1rem;
+}
+
+.auth-side-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .82);
+  font-size: .84rem;
+  line-height: 1.6;
+}
+
+.auth-side-note i {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand);
+}
+
+.auth-side-actions {
+  margin-top: auto;
+}
+
+.auth-side-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(80, 197, 255, .3);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all var(--t-base);
+}
+
+.auth-side-btn:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #0c1630;
+  transform: translateY(-1px);
+}
+
+/* ═══ 4. CARD HEAD ════════════════════════════════════════════ */
+.auth-card {
+  padding: 40px;
+  height: 100%;
+  background: var(--surface);
+}
+
+.auth-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.auth-card-head-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.auth-card-icon {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-50);
+  color: var(--brand);
+  border: 1px solid var(--brand-200);
+  font-size: 1.25rem;
+}
+
+.auth-eyebrow,
+.auth-modal-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--brand);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.auth-card-head h2 {
+  margin: 0 0 6px;
+  color: var(--text-head);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.auth-card-head p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .875rem;
+  line-height: 1.65;
+}
+
+.auth-back-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  color: var(--text-head);
+  font-size: .82rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--t-base);
+}
+
+.auth-back-btn:hover {
+  border-color: var(--brand-ring);
+  color: var(--brand-dark);
+  background: var(--n-50);
+}
+
+/* feature strip */
+
+
+/* ═══ 5. FIELDS / INPUTS  (mirror .form-control-custom) ═══════ */
+.auth-form .row {
+  margin: 0 -8px;
+}
+
+.auth-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-head);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.auth-label span {
+  color: var(--red);
+}
+
+.auth-input-wrap,
+.auth-password-wrap,
+.auth-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.auth-input-wrap>i,
+.auth-password-wrap>i,
+.auth-select-wrap>i {
+  padding: 0 0 0 14px;
+  color: var(--text-faint);
+  font-size: .95rem;
+  pointer-events: none;
+}
+
+.auth-input{
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text-head);
+  font-family: var(--font-sans);
+  font-size: .9rem;
+}
+
+.auth-input::placeholder {
+  color: var(--text-faint);
+}
+
+
+
+
+
+/* Read-only text sitting where a .auth-select would go, e.g. a fixed
+   account type that isn't actually choosable. */
+.auth-static-value {
+  flex: 1 1 auto;
+  min-height: 46px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  color: var(--text-head);
+  font-size: .9rem;
+}
+
+.auth-input-wrap:focus-within,
+.auth-password-wrap:focus-within,
+.auth-select-wrap:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.auth-input-wrap.auth-input-error,
+.auth-password-wrap.auth-input-error {
+  border-color: rgba(239, 68, 68, .55);
+}
+
+.auth-input-wrap.auth-input-error:focus-within {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, .08);
+}
+
+/* password reveal toggle */
+.auth-password-toggle {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--brand-soft);
+  color: var(--brand-deeper);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+
+.auth-password-toggle:hover {
+  background: var(--brand-100);
+}
+
+/* meta row (remember / forgot) */
+.auth-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.auth-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text);
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+.auth-inline-link,
+.auth-link-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand-deeper);
+  font-size: .84rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.auth-inline-link:hover,
+.auth-link-btn:hover {
+  color: var(--brand-dark);
+  text-decoration: none;
+}
+
+/* ═══ 6. OTP INPUTS ═══════════════════════════════════════════ */
+.auth-otp-wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 4px 0;
+}
+
+.auth-otp-box {
+  flex: 1 1 0;
+  width: 100%;
+  max-width: 60px;
+  height: 58px;
+  padding: 0;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-head);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.auth-otp-box:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+/* ═══ 7. BUTTONS / ACTIONS  (mirror .form-btn) ═══════════════ */
+.auth-actions {
+  margin-top: 22px;
+}
+
+.auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 22px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--t-base);
+}
+
+.auth-btn-primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--text-head);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, .24);
+}
+
+.auth-btn-primary:hover {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: var(--text-head);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, .3);
+}
+
+
+
+
+
+.auth-btn:disabled,
+.auth-btn.disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Save-in-progress spinner - reuses the .form-btn-spinner element/
+   animation already shipped in styles.css (loaded on every auth page),
+   just adding the show-rule for .auth-btn's own loading class since
+   that CSS only wires it up for .form-btn. */
+.auth-btn.is-loading .form-btn-spinner {
+  display: inline-block;
+}
+
+/* ═══ 8. FOOTER / NOTES ═══════════════════════════════════════ */
+.auth-footer-text {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .86rem;
+}
+
+.auth-footer-text a {
+  color: var(--brand-deeper);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer-text a:hover {
+  color: var(--brand-dark);
+  text-decoration: none;
+}
+
+.auth-register-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--brand-50);
+  border: 1px solid var(--brand-200);
+  color: var(--brand-deeper);
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+.auth-register-note i {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand);
+}
+
+/* ═══ 9. RESET-OPTION MODAL ═══════════════════════════════════ */
+.auth-choice-modal .modal-dialog {
+  max-width: 560px;
+}
+
+.auth-modal-content {
+  border: 0;
+  border-radius: var(--r-2xl);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+}
+
+.auth-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 24px 26px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--brand-50) 100%);
+}
+
+.auth-modal-header h3 {
+  margin: 0 0 5px;
+  color: var(--text-head);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.auth-modal-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.auth-modal-close {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.auth-modal-close:hover {
+  background: var(--red-50);
+  border-color: rgba(239, 68, 68, .25);
+  color: var(--red-dark);
+}
+
+.auth-modal-body {
+  padding: 22px 26px 26px;
+}
+
+.auth-reset-options {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-reset-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  text-decoration: none;
+  transition: all var(--t-base);
+}
+
+.auth-reset-option:hover {
+  border-color: var(--brand-ring);
+  box-shadow: var(--shadow-md), 0 0 0 3px var(--brand-soft);
+  transform: translateY(-1px);
+}
+
+.auth-reset-option-featured {
+  border-color: var(--brand-200);
+  background: linear-gradient(135deg, var(--brand-50), var(--surface));
+}
+
+.auth-reset-option-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-50);
+  color: var(--brand);
+  border: 1px solid var(--brand-200);
+  font-size: 1.15rem;
+}
+
+.auth-reset-option-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.auth-reset-option-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.auth-reset-option-top h4 {
+  margin: 0;
+  color: var(--text-head);
+  font-size: .95rem;
+  font-weight: 800;
+}
+
+.auth-reset-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: var(--r-pill);
+  background: var(--green-50);
+  border: 1px solid rgba(16, 185, 129, .22);
+  color: var(--green-text);
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.auth-reset-option-content p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+.auth-reset-option-arrow {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+  font-size: 1.05rem;
+  transition: transform var(--t-base), color var(--t-base);
+}
+
+.auth-reset-option:hover .auth-reset-option-arrow {
+  color: var(--brand);
+  transform: translateX(3px);
+}
+
+/* ═══ 10. RESPONSIVE ══════════════════════════════════════════ */
+@media (max-width: 1199.98px) {
+  .auth-shell {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .auth-page {
+    align-items: flex-start;
+    padding: 96px 0 48px;
+  }
+
+
+  .auth-card {
+    padding: 26px 20px;
+  }
+
+  .auth-card-head {
+    flex-direction: row;
+  }
+
+  .auth-card-head h2 {
+    font-size: 1.3rem;
+  }
+
+  .auth-otp-box {
+    height: 52px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .auth-page {
+    padding: 88px 0 42px;
+  }
+
+
+  .auth-wrap {
+    border-radius: var(--r-xl);
+  }
+
+  .auth-card {
+    padding: 22px 16px;
+  }
+
+  .auth-card-icon {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+    font-size: 1.1rem;
+  }
+
+  .auth-card-head h2 {
+    font-size: 1.18rem;
+  }
+
+  .auth-back-btn span {
+    display: none;
+  }
+
+  .auth-back-btn {
+    padding: 0 11px;
+  }
+
+  .auth-otp-wrap {
+    gap: 7px;
+  }
+
+  .auth-otp-box {
+    height: 48px;
+    font-size: 1.1rem;
+    max-width: none;
+  }
+
+  .auth-btn {
+    min-height: 46px;
+  }
+
+  .auth-modal-header,
+  .auth-modal-body {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+/* ═══ Bootstrap alerts / validation inside the auth card → portal tokens ═══ */
+.auth-card .alert {
+  border-radius: var(--r-lg);
+  border: 1px solid transparent;
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.auth-card .alert-danger {
+  background: var(--red-50);
+  border-color: rgba(239, 68, 68, .22);
+  color: var(--red-text);
+}
+
+.auth-card .alert-success {
+  background: var(--green-50);
+  border-color: rgba(16, 185, 129, .22);
+  color: var(--green-text);
+}
+
+.auth-card .alert-warning {
+  background: var(--amber-50);
+  border-color: rgba(245, 158, 11, .22);
+  color: var(--amber-text);
+}
+
+.auth-card .alert-info {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+  color: var(--brand-deeper);
+}
+
+.auth-card .invalid-feedback {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--red-dark);
+}
+
+/* Small helper line under a registration field explaining why it's
+   asked for, or how the value is used. */
+.auth-field-hint {
+  font-size: .78rem;
+}

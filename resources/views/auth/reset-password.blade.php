@@ -1,36 +1,99 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+@extends('layouts.auth')
 
-        <x-validation-errors class="mb-4" />
+@section('title')
+Reset Password | Retirement Portal
+@endsection
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+@section('bodyClass', 'auth-password-page')
 
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@section('content')
 
-            <div class="block">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
+        <section class="auth-page section">
+            <div class="container" data-aos="fade-up">
+                <div class="auth-shell auth-shell-narrow">
+                    <div class="auth-wrap">
+                        <div class="auth-card">
+
+                            <div class="auth-card-head">
+                                <div class="auth-card-head-main">
+                                    <div class="auth-card-icon">
+                                        <i class="bi bi-shield-lock-fill"></i>
+                                    </div>
+                                    <div>
+                                        <span class="auth-eyebrow">Account Recovery</span>
+                                        <h2>Choose a new password</h2>
+                                        <p>Pick something strong you haven't used before.</p>
+                                    </div>
+                                </div>
+
+                                <a href="{{ route('login') }}" class="auth-back-btn">
+                                    <i class="bi bi-arrow-left"></i>
+                                    <span>Back</span>
+                                </a>
+                            </div>
+
+                            @if ($errors->any())
+                                <div class="alert alert-danger d-flex align-items-start gap-2">
+                                    <i class="bi bi-exclamation-triangle-fill mt-1"></i>
+                                    <div>{{ $errors->first() }}</div>
+                                </div>
+                            @endif
+
+                            <form method="POST" action="{{ route('password.update') }}" class="auth-form" autocomplete="off" novalidate>
+                                @csrf
+
+                                <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+                                <div class="row g-3">
+
+                                    <div class="col-12">
+                                        <label for="email" class="auth-label">Email Address <span>*</span></label>
+                                        <div class="auth-input-wrap @error('email') auth-input-error @enderror">
+                                            <i class="bi bi-envelope-fill"></i>
+                                            <input type="email" id="email" name="email" class="auth-input"
+                                                value="{{ old('email', $request->email) }}"
+                                                required autofocus autocomplete="username">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="password" class="auth-label">New Password <span>*</span></label>
+                                        <div class="auth-password-wrap @error('password') auth-input-error @enderror">
+                                            <i class="bi bi-lock-fill"></i>
+                                            <input type="password" id="password" name="password" class="auth-input"
+                                                required autocomplete="new-password">
+                                            <button type="button" class="auth-password-toggle" data-target="password" aria-label="Show password">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="password_confirmation" class="auth-label">Confirm New Password <span>*</span></label>
+                                        <div class="auth-password-wrap @error('password_confirmation') auth-input-error @enderror">
+                                            <i class="bi bi-lock-fill"></i>
+                                            <input type="password" id="password_confirmation" name="password_confirmation" class="auth-input"
+                                                required autocomplete="new-password">
+                                            <button type="button" class="auth-password-toggle" data-target="password_confirmation" aria-label="Show password">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="auth-actions">
+                                    <button type="submit" class="auth-btn auth-btn-primary w-100">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Reset Password
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+@endsection

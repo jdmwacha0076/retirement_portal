@@ -1,0 +1,277 @@
+/* ==========================================================================
+   Payment Request / Voucher — printable A4 template
+   Scoped entirely to resources/views/payment-requests/print/* - never
+   loaded on any other page. Deliberately plain (black text on white,
+   no gradients/shadows) since it exists to be printed, not browsed -
+   the on-screen preview before printing shares the same rules so what
+   you see is exactly what prints.
+   ========================================================================== */
+
+@page {
+    size: A4;
+    margin: 14mm 16mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.voucher-body {
+    margin: 0;
+    padding: 24px;
+    background: #eef1f5;
+    color: #1f2430;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.voucher-toolbar {
+    max-width: 210mm;
+    margin: 0 auto 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.voucher-toolbar button,
+.voucher-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #c7cdd8;
+    background: #fff;
+    color: #1f2430;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.voucher-toolbar .voucher-print-btn {
+    border-color: #2f6feb;
+    background: #2f6feb;
+    color: #fff;
+}
+
+.voucher-sheet {
+    max-width: 210mm;
+    min-height: 270mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 16mm;
+    border: 1px solid #d7dce5;
+    box-shadow: 0 8px 24px rgba(20, 24, 40, .08);
+}
+
+.voucher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #1f2430;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.voucher-org-name {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+.voucher-org-sub {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #4b5568;
+}
+
+.voucher-title-block {
+    text-align: right;
+}
+
+.voucher-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.voucher-ref {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.voucher-status-line {
+    margin: 2px 0 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #4b5568;
+}
+
+.voucher-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid #1f2430;
+    margin-bottom: 14px;
+}
+
+.voucher-field {
+    padding: 8px 12px;
+    border-bottom: 1px solid #c7cdd8;
+    border-right: 1px solid #c7cdd8;
+}
+
+.voucher-field:nth-child(2n) {
+    border-right: none;
+}
+
+.voucher-field--full {
+    grid-column: 1 / -1;
+    border-right: none;
+}
+
+.voucher-field-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4b5568;
+    margin-bottom: 2px;
+}
+
+.voucher-field-value {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.voucher-amount-box {
+    border: 2px solid #1f2430;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.voucher-amount-box .voucher-amount-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4b5568;
+}
+
+.voucher-amount-box .voucher-amount-value {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.voucher-words {
+    border-top: 1px dashed #c7cdd8;
+    margin-top: 8px;
+    padding-top: 8px;
+    font-size: 12px;
+    font-style: italic;
+    flex-basis: 100%;
+}
+
+.voucher-calc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 12px;
+}
+
+.voucher-calc-table th,
+.voucher-calc-table td {
+    border: 1px solid #c7cdd8;
+    padding: 6px 10px;
+    text-align: right;
+}
+
+.voucher-calc-table th:first-child,
+.voucher-calc-table td:first-child {
+    text-align: left;
+}
+
+.voucher-calc-table tr.voucher-calc-total td {
+    font-weight: 800;
+    border-top: 2px solid #1f2430;
+}
+
+.voucher-section-heading {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4b5568;
+    margin: 16px 0 6px;
+    font-weight: 700;
+}
+
+.voucher-signatures {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.voucher-signature-box {
+    text-align: center;
+}
+
+.voucher-signature-line {
+    border-bottom: 1px solid #1f2430;
+    height: 40px;
+    margin-bottom: 6px;
+}
+
+.voucher-signature-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.voucher-signature-name {
+    font-size: 11px;
+    color: #4b5568;
+    margin-top: 2px;
+}
+
+.voucher-footer-note {
+    margin-top: 20px;
+    font-size: 10px;
+    color: #7b8497;
+    text-align: center;
+}
+
+@media print {
+    body.voucher-body {
+        background: #fff;
+        padding: 0;
+    }
+
+    .voucher-toolbar {
+        display: none !important;
+    }
+
+    .voucher-sheet {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        max-width: none;
+        min-height: 0;
+        padding: 0;
+    }
+}

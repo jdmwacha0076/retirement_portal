@@ -1,0 +1,48 @@
+# =========================================================================
+# Defensive lockdown for the Laravel project root.
+#
+# The correct configuration is for Apache's DocumentRoot (or virtual host)
+# to point at the /public folder, NOT at this project root — Laravel is
+# built to only ever serve requests through public/index.php. If Apache
+# is ever pointed at this folder instead (a common XAMPP/shared-hosting
+# mistake), this file is a safety net that blocks direct browser access to
+# the framework internals and secrets (.env, vendor/, storage/, etc.) that
+# would otherwise be served back as plain files. It has NO effect — and is
+# never even read — once DocumentRoot correctly points at /public.
+# =========================================================================
+
+# Block dotfiles: .env, .env.backup, .env.production, .git, .gitignore,
+# .htaccess itself, etc.
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block Composer/Node manifests, lockfiles, and the artisan CLI entry
+# point — these reveal dependency versions (useful to an attacker
+# fingerprinting known CVEs) and shouldn't be fetchable as plain files.
+<FilesMatch "^(composer\.(json|lock)|package(-lock)?\.json|artisan|webpack\.mix\.js|vite\.config\.js)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block direct access to every internal Laravel folder — application code,
+# config (which can include cached secrets), routes, Blade source,
+# storage (logs, framework cache, and any non-public uploads), the
+# database folder (migrations/seeders/sqlite files), installed vendor
+# packages, and tests. Deliberately does NOT list "public" — that folder
+# is meant to be served.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)(/.*)?$ - [F,L]
+</IfModule>

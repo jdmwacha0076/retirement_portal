@@ -162,6 +162,10 @@ return [
     */
 
     'features' => [
+        // Self-registration is open, but only ever creates 'staff'
+        // accounts - see App\Actions\Fortify\CreateNewUser, which
+        // hardcodes the role rather than trusting the request. Promoting
+        // someone to admin is a separate, deliberate action.
         Features::registration(),
         Features::resetPasswords(),
         // Features::emailVerification(),

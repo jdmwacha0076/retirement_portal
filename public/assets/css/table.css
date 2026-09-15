@@ -1,0 +1,1133 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * RETIREMENT PORTAL ADMIN - TABLE / LISTING PAGES (ported verbatim from events_portal - portal-agnostic design system, no portal-specific styling)
+ * table.css · LOAD ONLY ON LISTING / DIRECTORY / DASHBOARD PAGES
+ * ───────────────────────────────────────────────────────────────────────────
+ * Table-specific rules ONLY. Buttons, badges, modals, dropdowns and alerts
+ * all come from styles.css (always loaded first). The portal stat cards
+ * and directory entity cells below are the one exception kept here: they
+ * are reusable across Events, Categories, Organizers, Users, Locations,
+ * Questions and other admin directory / listing pages.
+ *   1. Listing shell             7. Row action menu
+ *   2. Stat cards                8. Question & reply thread panel
+ *   3. Table wrap / card         9. Empty state
+ *   4. Table header / toolbar   10. Pagination
+ *   5. Search / filter bar      11. SMS / log table cells
+ *   6. Data table & cells       12. Responsive
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   1. LISTING SHELL
+   ═══════════════════════════════════════════════════════════════ */
+.dashboard-shell,
+.table-page,
+.data-table-page {
+  background: var(--bg);
+}
+
+.dashboard-shell>.container {
+  width: 100%;
+  max-width: 1800px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. STAT CARDS
+   Reusable stat cards used at the top of Events, Categories,
+   Organizers, Users, Locations, Questions and other admin
+   directory / listing pages.
+   ═══════════════════════════════════════════════════════════════ */
+
+
+
+
+
+
+
+
+/* CONSISTENCY FIX: Dashboard needs amber/red accent variants for its
+   Draft / Cancelled stat tiles - added here following the exact same
+   pattern as -success, using the same tokens as .web-top-card-danger /
+   .web-top-card-warning in styles.css so both stat-card systems read
+   identically wherever they're used. */
+
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   3. TABLE WRAP / CARD  (.web-table-view / .web-table-card)
+   ═══════════════════════════════════════════════════════════════ */
+.web-table-view {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-sm);
+  padding: 28px;
+}
+
+.web-table-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  /* NOTE: overflow:visible is set in styles.css so row dropdowns escape */
+}
+
+.web-table-card .table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--n-200) transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. TABLE HEADER / TOOLBAR
+   ═══════════════════════════════════════════════════════════════ */
+.web-table-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.web-table-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.web-table-title-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-50);
+  color: var(--brand);
+  font-size: 1.1rem;
+  border: 1px solid var(--brand-200);
+}
+
+.web-table-title {
+  margin: 0 0 3px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-head);
+  font-family: var(--font-display);
+  line-height: 1.3;
+}
+
+.web-table-subtitle {
+  margin: 0;
+  font-size: .83rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.web-table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* record count chip */
+.web-table-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 36px;
+  border-radius: var(--r-pill);
+  background: var(--n-100);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. SEARCH / FILTER BAR
+   ═══════════════════════════════════════════════════════════════ */
+.web-table-search {
+  padding: 18px 20px;
+  border-radius: var(--r-xl);
+  background: var(--n-50);
+  border: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+
+/* Same search/filter form shell, used standalone on pages whose search
+   bar isn't wrapped in .web-table-search (see the pages that combine
+   both classes: class="web-table-search portal-filter-panel"). */
+.portal-filter-panel {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: #f8fafc;
+}
+
+.web-table-search .form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text-head);
+}
+
+.web-table-search .input-group {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+}
+
+.web-table-search .input-group:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.web-table-search .input-group-text {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: var(--surface) !important;
+  color: var(--text-faint);
+}
+
+.input-round,
+.search-select {
+  min-height: 44px;
+  border-radius: var(--r-md) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface);
+  color: var(--text-head);
+  font-size: .875rem;
+  box-shadow: none !important;
+  font-family: var(--font-sans);
+}
+
+.web-table-search .input-group .input-round {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding-left: 0;
+  min-height: 44px;
+}
+
+.input-round:focus,
+.search-select:focus,
+.web-table-search .form-control:focus,
+.web-table-search .form-select:focus {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 3px var(--brand-soft) !important;
+  outline: none;
+}
+
+.search-select {
+  cursor: pointer;
+}
+
+/* hint banner */
+.web-table-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--brand-50);
+  border: 1px solid var(--brand-200);
+  color: var(--brand-deeper);
+  font-size: .81rem;
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.web-table-hint i {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. DATA TABLE & CELLS
+   ═══════════════════════════════════════════════════════════════ */
+.web-data-table {
+  width: 100%;
+  min-width: 980px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  --bs-table-bg: transparent;
+}
+
+.web-data-table thead th {
+  padding: 11px 16px;
+  background: var(--n-50);
+  color: var(--text-muted);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  border-top: 0;
+  white-space: nowrap;
+}
+
+.web-data-table thead th:first-child {
+  border-radius: var(--r-sm) 0 0 0;
+}
+
+.web-data-table thead th:last-child {
+  border-radius: 0 var(--r-sm) 0 0;
+}
+
+.web-data-table tbody td {
+  padding: 14px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--n-100);
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: .875rem;
+}
+
+.web-data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.web-data-table tbody tr {
+  transition: background var(--t-fast);
+}
+
+.web-data-table tbody tr:hover td {
+  background: var(--brand-50);
+}
+
+/* ID cell */
+.web-id-cell {
+  width: 56px;
+  min-width: 56px;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+/* Entity cell (avatar + name) */
+.web-user-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Directory / entity-icon cell — used by Categories, Locations,
+   Organizers, Questions and Schedule for a leading icon + label,
+   including nested (indented) rows for parent/child categories. */
+.portal-entity-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.portal-entity-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: .95rem;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, .12);
+}
+
+.portal-entity-icon i {
+  line-height: 1;
+}
+
+.portal-entity-cell.is-nested {
+  padding-left: 26px;
+  position: relative;
+}
+
+.portal-entity-cell.is-nested::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  width: 11px;
+  height: 10px;
+  border-left: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+  border-bottom-left-radius: 5px;
+  transform: translateY(-70%);
+}
+
+.web-user-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: var(--r-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-100), var(--brand-50));
+  color: var(--brand-deeper);
+  font-size: .82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 1px solid var(--brand-200);
+}
+
+.web-user-avatar-image {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--brand-50);
+}
+
+/* Shared entity image for directory tables (Events, Locations, Organizers). */
+.portal-entity-image {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--brand-50);
+}
+
+.web-user-name {
+  margin-bottom: 2px;
+  font-size: .875rem;
+  font-weight: 700;
+  color: var(--text-head);
+  line-height: 1.35;
+}
+
+/* Secondary meta line under an entity name (email / phone / role). */
+.web-user-meta {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.web-user-meta i {
+  color: var(--brand);
+  font-size: .72rem;
+}
+
+.web-user-self-badge {
+  margin-left: 4px;
+  font-size: .68rem;
+  vertical-align: middle;
+}
+
+/* Plain text link inside a table cell (e.g. the Participants count on the
+   Events list, linking through to that event's registrants) — same weight
+   and size as .web-user-name so it reads as a normal cell value, brand
+   color on hover like every other interactive element in the app. */
+.web-table-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .875rem;
+  font-weight: 700;
+  color: var(--text-head);
+  text-decoration: none;
+}
+
+.web-table-link i {
+  color: var(--brand);
+  font-size: .8rem;
+}
+
+.web-table-link:hover,
+.web-table-link:focus {
+  color: var(--brand-dark);
+  text-decoration: underline;
+}
+
+.portal-directory-card {
+  position: relative;
+  overflow: visible;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. ROW ACTION MENU
+   ═══════════════════════════════════════════════════════════════ */
+.portal-menu-trigger {
+  flex-shrink: 0;
+}
+
+.floating-action-menu form {
+  margin: 0;
+}
+
+.floating-action-menu form .floating-action-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. QUESTION & REPLY THREAD PANEL
+   Moderation table on the admin Questions page: the question cell,
+   submitter cell and the expandable reply-thread row.
+   ═══════════════════════════════════════════════════════════════ */
+.portal-question-cell {
+  min-width: 220px;
+  max-width: 360px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-head);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.portal-question-cell > i {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand);
+  font-size: .82rem;
+}
+
+.portal-question-submitter {
+  min-width: 125px;
+}
+
+.portal-question-submitter strong,
+.portal-question-submitter span {
+  display: block;
+}
+
+.portal-question-submitter strong {
+  color: var(--text-head);
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.portal-question-submitter span {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: .7rem;
+}
+
+.portal-thread-toggle {
+  min-width: 58px;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-head);
+  font-size: .76rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    color .2s ease;
+}
+
+.portal-thread-toggle:hover,
+.portal-thread-toggle.is-open {
+  border-color: var(--brand);
+  background: var(--brand-50);
+  color: var(--brand);
+}
+
+.portal-thread-chevron {
+  font-size: .62rem;
+  transition: transform .22s ease;
+}
+
+.portal-thread-toggle.is-open .portal-thread-chevron {
+  transform: rotate(180deg);
+}
+
+.portal-thread-row > td {
+  padding: 0 !important;
+  border-top: 0 !important;
+}
+
+.portal-thread-panel {
+  padding: 18px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: #f8fafc;
+}
+
+.portal-thread-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.portal-thread-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: var(--brand);
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.portal-thread-header h4 {
+  margin: 0;
+  color: var(--text-head);
+  font-size: .92rem;
+  font-weight: 800;
+}
+
+.portal-thread-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.portal-thread-message.is-question {
+  margin-bottom: 14px;
+  border-left: 3px solid var(--text-head);
+}
+
+.portal-thread-message.is-panelist {
+  border-left: 3px solid var(--brand);
+  background: var(--brand-50);
+}
+
+.portal-thread-message.is-attendee {
+  border-left: 3px solid var(--n-300);
+}
+
+.portal-thread-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--brand-50);
+  color: var(--brand);
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.portal-thread-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.portal-thread-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.portal-thread-meta strong {
+  color: var(--text-head);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.portal-thread-meta span,
+.portal-thread-meta time {
+  color: var(--text-faint);
+  font-size: .68rem;
+}
+
+.portal-thread-meta time {
+  margin-left: auto;
+}
+
+.portal-thread-role {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff !important;
+  font-size: .58rem !important;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.portal-thread-content p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .82rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+/* Per-reply moderation trigger — a smaller inline sibling of
+   .portal-action-btn, sized to sit inline within .portal-thread-meta
+   rather than a table-row action cell. */
+.portal-thread-action-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--n-600);
+  font-size: .78rem;
+  cursor: pointer;
+  transition: all var(--t-base);
+  flex: 0 0 auto;
+}
+
+.portal-thread-action-btn:hover,
+.portal-thread-action-btn:focus {
+  background: var(--n-50);
+  border-color: var(--border-md);
+  color: var(--brand);
+}
+
+/* A reply an Admin/Staff has hidden — dimmed and dashed so it still
+   reads in the thread (for moderation context) without looking like
+   a normal, currently-visible message. */
+.portal-thread-message.is-hidden-reply {
+  opacity: .6;
+  border-style: dashed;
+}
+
+.portal-thread-empty {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.portal-thread-empty i {
+  margin-bottom: 6px;
+  color: var(--brand);
+  font-size: 1.4rem;
+}
+
+.portal-thread-empty strong {
+  color: var(--text-head);
+  font-size: .8rem;
+}
+
+.portal-thread-empty span {
+  margin-top: 2px;
+  font-size: .72rem;
+}
+
+/* Lets Admin/Staff post a reply straight from the moderation queue —
+   never gated by the public question window, unlike the
+   attendee-facing composer on the public Q&A page. */
+.portal-thread-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+
+.portal-thread-composer textarea {
+  flex: 1;
+  resize: vertical;
+  min-height: 44px;
+  max-height: 140px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  font-size: .85rem;
+  font-family: inherit;
+  color: var(--text-head);
+}
+
+.portal-thread-composer textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(80, 197, 255, .15);
+}
+
+.portal-thread-composer-send {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--r-lg);
+  border: none;
+  background: var(--brand);
+  color: var(--text-head);
+  font-size: .82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s ease;
+}
+
+.portal-thread-composer-send:hover {
+  background: var(--brand-dark);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. EMPTY STATE
+   ═══════════════════════════════════════════════════════════════ */
+.web-table-empty {
+  padding: 0 !important;
+  border-bottom: 0 !important;
+  background: transparent;
+}
+
+.web-table-empty-cell {
+  padding: 48px 24px !important;
+  border-bottom: 0 !important;
+}
+
+.web-table-empty-state {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 40px 28px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--border-md);
+  border-radius: var(--r-2xl);
+}
+
+.web-table-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: var(--r-xl);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-100), var(--brand-50));
+  color: var(--brand);
+  font-size: 1.5rem;
+  border: 1px solid var(--brand-200);
+}
+
+.web-table-empty-state h6 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-head);
+}
+
+.web-table-empty-state p {
+  margin: 0 0 20px;
+  font-size: .85rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.web-table-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: var(--r-md);
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  color: var(--text-head);
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--t-base);
+}
+
+.web-table-empty-btn:hover {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: var(--text-head);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, .25);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. PAGINATION
+   ═══════════════════════════════════════════════════════════════ */
+.web-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--n-100);
+}
+
+.web-table-summary {
+  font-size: .8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.web-table-pages {
+  margin: 0;
+}
+
+.web-table-pagination .pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.web-table-pagination .page-link {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--r-md) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+  color: var(--text-head) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: var(--shadow-xs) !important;
+  text-decoration: none;
+  transition: all var(--t-fast);
+}
+
+.web-table-pagination .page-link:hover {
+  background: var(--brand-50) !important;
+  border-color: var(--brand-ring) !important;
+  color: var(--brand-deeper) !important;
+}
+
+.web-table-pagination .page-item.active .page-link {
+  background: var(--brand) !important;
+  border-color: var(--brand) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, .3) !important;
+}
+
+.web-table-pagination .page-item.disabled .page-link,
+.web-table-pagination .disabled>.page-link {
+  opacity: .4;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. SMS / LOG TABLE CELLS  (migrated from legacy dc-portal.css)
+   Two-line date, monospace code chip, truncated message cell.
+   Used by resources/views/sms/logs.blade.php and any log listing.
+   ═══════════════════════════════════════════════════════════════ */
+.table-actions-cell {
+  white-space: nowrap;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   12. RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1199.98px) {
+
+  .dashboard-shell>.container {
+    max-width: 100%;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
+
+@media (max-width: 991.98px) {
+
+  .web-table-header,
+  .web-table-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .web-table-actions {
+    justify-content: flex-start;
+  }
+
+  .web-data-table {
+    min-width: 920px;
+  }
+}
+
+@media (max-width: 767.98px) {
+
+  
+
+  .portal-filter-panel {
+    padding: 14px;
+  }
+
+  .portal-entity-cell.is-nested {
+    padding-left: 18px;
+  }
+
+  .portal-entity-cell.is-nested::before {
+    left: 2px;
+  }
+
+  .portal-thread-panel {
+    padding: 14px;
+  }
+
+  .portal-thread-header {
+    align-items: flex-start;
+  }
+
+  .portal-thread-meta time {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .web-table-view {
+    padding: 18px;
+    border-radius: var(--r-xl);
+  }
+
+  .web-table-card {
+    border-radius: var(--r-lg);
+  }
+
+  .web-table-title {
+    font-size: 1.1rem;
+  }
+
+  .web-table-search {
+    padding: 14px 16px;
+  }
+
+  .web-table-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .web-table-actions .btn-primary,
+  .web-table-actions .btn-secondary,
+  .web-table-actions .web-table-stat {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .web-data-table thead th,
+  .web-data-table tbody td {
+    padding: 12px 12px;
+  }
+}
+
+@media (max-width: 575.98px) {
+
+  .dashboard-shell>.container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Table-cell avatars (photo, initials fallback, and the shared
+     directory entity image) all shrink together so rows stay a
+     consistent height regardless of which variant a page renders. */
+  .web-user-avatar,
+  .web-user-avatar-image,
+  .portal-entity-image {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+
+  .portal-thread-message {
+    padding: 11px;
+  }
+
+  .portal-thread-avatar {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+
+  .web-table-view {
+    padding: 14px;
+  }
+
+  .web-data-table {
+    min-width: 860px;
+  }
+
+  .web-table-pages {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .web-table-pages .pagination {
+    flex-wrap: nowrap;
+  }
+
+  .web-table-pagination .page-link {
+    min-width: 32px;
+    height: 32px;
+    font-size: .75rem;
+  }
+
+  
+}
