@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Activity Budget / Retirement — printable A4-landscape report template
+   Scoped entirely to resources/views/activities/budget/print.blade.php and
+   resources/views/activities/retirement/print.blade.php - never loaded on
+   any other page. Sibling to assets/css/print.css (the Payment Request
+   voucher stylesheet) but deliberately its own file: vouchers are a single
+   fixed-field portrait form, these reports are wide line-item tables that
+   need landscape orientation and their own @page rule - the two never load
+   on the same page, so there's no conflict in having two @page rules
+   across the two files.
+   ========================================================================== */
+
+@page {
+    size: A4 landscape;
+    margin: 12mm 14mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.report-body {
+    margin: 0;
+    padding: 24px;
+    background: #eef1f5;
+    color: #1f2430;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.report-toolbar {
+    max-width: 277mm;
+    margin: 0 auto 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.report-toolbar button,
+.report-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #c7cdd8;
+    background: #fff;
+    color: #1f2430;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.report-toolbar .report-print-btn {
+    border-color: #2f6feb;
+    background: #2f6feb;
+    color: #fff;
+}
+
+.report-sheet {
+    max-width: 277mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 14mm;
+    border: 1px solid #d7dce5;
+    box-shadow: 0 8px 24px rgba(20, 24, 40, .08);
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #1f2430;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+}
+
+.report-org-name {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+.report-org-sub {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: #4b5568;
+}
+
+.report-title-block {
+    text-align: right;
+}
+
+.report-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.report-ref {
+    margin: 4px 0 0;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.report-status-line {
+    margin: 2px 0 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #4b5568;
+}
+
+.report-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid #1f2430;
+    margin-bottom: 14px;
+}
+
+.report-meta-item {
+    padding: 7px 10px;
+    border-bottom: 1px solid #c7cdd8;
+    border-right: 1px solid #c7cdd8;
+}
+
+.report-meta-item:nth-child(4n) {
+    border-right: none;
+}
+
+.report-meta-item--full {
+    grid-column: 1 / -1;
+    border-right: none;
+}
+
+.report-meta-label {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4b5568;
+    margin-bottom: 2px;
+}
+
+.report-meta-value {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 10.5px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #c7cdd8;
+    padding: 5px 7px;
+    text-align: right;
+    vertical-align: top;
+}
+
+.report-table th.text-left,
+.report-table td.text-left {
+    text-align: left;
+}
+
+.report-table thead th {
+    background: #f3f5f9;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #4b5568;
+}
+
+.report-table tfoot td {
+    font-weight: 800;
+    border-top: 2px solid #1f2430;
+    background: #f8f9fb;
+}
+
+.report-section-heading {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4b5568;
+    margin: 16px 0 6px;
+    font-weight: 700;
+}
+
+.report-footer-note {
+    margin-top: 16px;
+    font-size: 9px;
+    color: #7b8497;
+    text-align: center;
+}
+
+@media print {
+    body.report-body {
+        background: #fff;
+        padding: 0;
+    }
+
+    .report-toolbar {
+        display: none !important;
+    }
+
+    .report-sheet {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        max-width: none;
+        min-height: 0;
+        padding: 0;
+    }
+}

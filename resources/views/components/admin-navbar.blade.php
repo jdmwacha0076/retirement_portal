@@ -44,6 +44,20 @@
                             My Tasks
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('activities.index') }}"
+                            class="dc-command-link {{ request()->routeIs('activities.*') ? 'active' : '' }}">
+                            Activities
+                        </a>
+                    </li>
+                    @if ($navUser?->isAdmin())
+                        <li>
+                            <a href="{{ route('budget-settings.activity-types.index') }}"
+                                class="dc-command-link {{ request()->routeIs('budget-settings.*') ? 'active' : '' }}">
+                                Finance Settings
+                            </a>
+                        </li>
+                    @endif
                 </ul>
 
                 <div class="dropdown dc-command-dropdown me-2">
@@ -127,6 +141,10 @@
             <a href="{{ route('dashboard') }}" class="dc-command-mobile-link">Dashboard</a>
             <a href="{{ route('payment-requests.index') }}" class="dc-command-mobile-link">Payment Requests</a>
             <a href="{{ route('payment-requests.my-tasks') }}" class="dc-command-mobile-link">My Tasks</a>
+            <a href="{{ route('activities.index') }}" class="dc-command-mobile-link">Activities</a>
+            @if ($navUser?->isAdmin())
+                <a href="{{ route('budget-settings.activity-types.index') }}" class="dc-command-mobile-link">Finance Settings</a>
+            @endif
             <a href="{{ route('notifications.index') }}" class="dc-command-mobile-link">
                 Notifications
                 @if ($navUnreadCount > 0)

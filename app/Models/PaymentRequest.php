@@ -72,6 +72,29 @@ class PaymentRequest extends Model
         return $this->hasOne(PaymentRequestConsultancyDetail::class);
     }
 
+    /**
+     * Set only when this Payment Request was generated from the Activity
+     * Budget module - "Activity Advance" purpose. Mutually exclusive with
+     * sourceActivityRetirement() (enforced in the service layer, not at
+     * the DB level). Both null (every Payment Request that predates this
+     * module, and any created independently of it) behaves exactly as
+     * before - this relationship is purely additive.
+     */
+    public function sourceActivityBudget(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\ActivityBudget::class, 'source_activity_budget_id');
+    }
+
+    /**
+     * Set only when this Payment Request was generated from the Activity
+     * Budget module - "Activity Reimbursement" purpose. Mutually
+     * exclusive with sourceActivityBudget().
+     */
+    public function sourceActivityRetirement(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\ActivityRetirement::class, 'source_activity_retirement_id');
+    }
+
     public function history(): HasMany
     {
         return $this->hasMany(PaymentRequestHistory::class)->latest('created_at');

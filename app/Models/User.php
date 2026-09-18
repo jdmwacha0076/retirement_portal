@@ -162,4 +162,59 @@ class User extends Authenticatable
     {
         return $this->hasMany(PaymentRequest::class, 'current_assignee_id');
     }
+
+    /**
+     * Activities originally registered by this user - see
+     * Activity::created_by.
+     */
+    public function createdActivities(): HasMany
+    {
+        return $this->hasMany(\App\Models\Activity::class, 'created_by');
+    }
+
+    /**
+     * Activities this user is named as the on-the-ground coordinator for
+     * - see Activity::coordinator_id. Distinct from createdActivities():
+     * the registrant and the coordinator are separate concepts.
+     */
+    public function coordinatedActivities(): HasMany
+    {
+        return $this->hasMany(\App\Models\Activity::class, 'coordinator_id');
+    }
+
+    /**
+     * Activity budget versions originally created by this user - see
+     * ActivityBudget::created_by.
+     */
+    public function createdActivityBudgets(): HasMany
+    {
+        return $this->hasMany(\App\Models\ActivityBudget::class, 'created_by');
+    }
+
+    /**
+     * Activity budgets currently sitting with this user for action - see
+     * ActivityBudget::current_assignee_id. Backs "My Tasks".
+     */
+    public function assignedActivityBudgets(): HasMany
+    {
+        return $this->hasMany(\App\Models\ActivityBudget::class, 'current_assignee_id');
+    }
+
+    /**
+     * Activity retirements originally created by this user - see
+     * ActivityRetirement::created_by.
+     */
+    public function createdActivityRetirements(): HasMany
+    {
+        return $this->hasMany(\App\Models\ActivityRetirement::class, 'created_by');
+    }
+
+    /**
+     * Activity retirements currently sitting with this user for action -
+     * see ActivityRetirement::current_assignee_id. Backs "My Tasks".
+     */
+    public function assignedActivityRetirements(): HasMany
+    {
+        return $this->hasMany(\App\Models\ActivityRetirement::class, 'current_assignee_id');
+    }
 }
